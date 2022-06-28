@@ -100,7 +100,7 @@ resource "aws_subnet" "tier3-sub-pri-c-was" {
 resource "aws_subnet" "tier3-sub-pri-a-db" {
   vpc_id            = aws_vpc.tier3-vpc.id
   cidr_block        = "10.0.50.0/24"
-  availability_zone = "ap-northeast-2c"
+  availability_zone = "ap-northeast-2a"
   
   tags = {
     Name = "tier3-sub-pri-a-db"
