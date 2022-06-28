@@ -76,6 +76,48 @@ resource "aws_subnet" "tier3-sub-pri-c-web" {
   }
 }
 
+# private was
+resource "aws_subnet" "tier3-sub-pri-a-was" {
+  vpc_id            = aws_vpc.tier3-vpc.id
+  cidr_block        = "10.0.30.0/24"
+  availability_zone = "ap-northeast-2a"
+
+  tags = {
+    Name = "tier3-sub-pri-a-was"
+  }
+}
+resource "aws_subnet" "tier3-sub-pri-c-was" {
+  vpc_id            = aws_vpc.tier3-vpc.id
+  cidr_block        = "10.0.40.0/24"
+  availability_zone = "ap-northeast-2c"
+
+  tags = {
+    Name = "tier3-sub-pri-c-was"
+  }
+}
+
+# private db
+resource "aws_subnet" "tier3-sub-pri-a-db" {
+  vpc_id            = aws_vpc.tier3-vpc.id
+  cidr_block        = "10.0.50.0/24"
+  availability_zone = "ap-northeast-2c"
+  
+  tags = {
+    Name = "tier3-sub-pri-a-db"
+  }
+}
+
+resource "aws_subnet" "tier3-sub-pri-c-db" {
+  vpc_id            = aws_vpc.tier3-vpc.id
+  cidr_block        = "10.0.60.0/24"
+  availability_zone = "ap-northeast-2c"
+
+  tags = {
+    Name = "tier3-sub-pri-c-db"
+  }
+}
+
+
 # Route table
 # public > igw
 resource "aws_route_table" "tier3-rt-pub" {
@@ -157,7 +199,7 @@ resource "aws_instance" "tier3-ec2-pub-a-bastion" {
   availability_zone = "ap-northeast-2a"
 
   subnet_id = aws_subnet.tier3-sub-pub-a.id
-  key_name  = "test"
+  key_name  = aws_key_pair.mykeypair.key_name
   vpc_security_group_ids = [
     aws_security_group.tier3-sg-pub-bastion.id
   ]
@@ -267,7 +309,7 @@ resource "aws_instance" "tier3-ec2-pri-a-web1" {
   availability_zone = "ap-northeast-2a"
 
   subnet_id = aws_subnet.tier3-sub-pri-a-web.id
-  key_name  = "test"
+  key_name  = aws_key_pair.mykeypair.key_name
   vpc_security_group_ids = [
     aws_security_group.tier3-sg-pri-web.id
   ]
@@ -283,7 +325,7 @@ resource "aws_instance" "tier3-ec2-pri-c-web2" {
   availability_zone = "ap-northeast-2c"
 
   subnet_id = aws_subnet.tier3-sub-pri-c-web.id
-  key_name  = "test"
+  key_name  = aws_key_pair.mykeypair.key_name
   vpc_security_group_ids = [
     aws_security_group.tier3-sg-pri-web.id
   ]
@@ -292,8 +334,6 @@ resource "aws_instance" "tier3-ec2-pri-c-web2" {
   }
 }
 
-
-
 #db
 resource "aws_instance" "tier3-ec2-pri-a-db1" {
   ami               = "ami-0fd0765afb77bcca7"
@@ -301,7 +341,7 @@ resource "aws_instance" "tier3-ec2-pri-a-db1" {
   availability_zone = "ap-northeast-2a"
 
   subnet_id = aws_subnet.tier3-sub-pri-a-db.id
-  key_name  = "test"
+  key_name  = aws_key_pair.mykeypair.key_name
   vpc_security_group_ids = [
     aws_security_group.tier3-sg-pri-db.id
   ]
@@ -310,14 +350,13 @@ resource "aws_instance" "tier3-ec2-pri-a-db1" {
   }
 }
 
-
 resource "aws_instance" "tier3-ec2-pri-c-db2" {
   ami               = "ami-0fd0765afb77bcca7"
   instance_type     = "t3.small"
   availability_zone = "ap-northeast-2c"
 
   subnet_id = aws_subnet.tier3-sub-pri-c-db.id
-  key_name  = "test"
+  key_name  = aws_key_pair.mykeypair.key_name
   vpc_security_group_ids = [
     aws_security_group.tier3-sg-pri-db.id
   ]
@@ -337,7 +376,7 @@ resource "aws_instance" "tier3-ec2-pri-a-was1" {
   availability_zone = "ap-northeast-2a"
 
   subnet_id = aws_subnet.tier3-sub-pri-a-was.id
-  key_name  = "test"
+  key_name  = aws_key_pair.mykeypair.key_name
 
 
   # ebs 추가적으로 구성
@@ -362,7 +401,7 @@ resource "aws_instance" "tier3-ec2-pri-c-was2" {
   availability_zone = "ap-northeast-2c"
 
   subnet_id = aws_subnet.tier3-sub-pri-c-was.id
-  key_name  = "test"
+  key_name  = aws_key_pair.mykeypair.key_name
 
 
   ebs_block_device {
