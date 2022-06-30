@@ -101,7 +101,7 @@ resource "aws_subnet" "tier3-sub-pri-a-db" {
   vpc_id            = aws_vpc.tier3-vpc.id
   cidr_block        = "10.0.50.0/24"
   availability_zone = "ap-northeast-2a"
-  
+
   tags = {
     Name = "tier3-sub-pri-a-db"
   }
@@ -166,6 +166,58 @@ resource "aws_route_table_association" "tier3-rtass-pri-a-web" {
 resource "aws_route_table_association" "tier3-rtass-pri-c-web" {
   subnet_id      = aws_subnet.tier3-sub-pri-c-web.id
   route_table_id = aws_route_table.tier3-rt-pri-web.id
+}
+
+# private was > nat
+resource "aws_route_table" "tier3-rt-pri-was" {
+  vpc_id = aws_vpc.tier3-vpc.id
+
+  tags = {
+    Name = "tier3-rt-pri-was"
+  }
+}
+
+resource "aws_route" "tier3-r-pri-was" {
+  route_table_id         = aws_route_table.tier3-rt-pri-was.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.tier3-ngw.id
+}
+
+# private was subnet을 pirvate route table에 연결
+resource "aws_route_table_association" "tier3-rtass-pri-a-was" {
+  subnet_id      = aws_subnet.tier3-sub-pri-a-was.id
+  route_table_id = aws_route_table.tier3-rt-pri-was.id
+}
+
+resource "aws_route_table_association" "tier3-rtass-pri-c-was" {
+  subnet_id      = aws_subnet.tier3-sub-pri-c-was.id
+  route_table_id = aws_route_table.tier3-rt-pri-was.id
+}
+
+# private db > nat
+resource "aws_route_table" "tier3-rt-pri-db" {
+  vpc_id = aws_vpc.tier3-vpc.id
+
+  tags = {
+    Name = "tier3-rt-pri-db"
+  }
+}
+
+resource "aws_route" "tier3-r-pri-db" {
+  route_table_id         = aws_route_table.tier3-rt-pri-db.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.tier3-ngw.id
+}
+
+# private db subnet을 pirvate route table에 연결
+resource "aws_route_table_association" "tier3-rtass-pri-a-db" {
+  subnet_id      = aws_subnet.tier3-sub-pri-a-db.id
+  route_table_id = aws_route_table.tier3-rt-pri-db.id
+}
+
+resource "aws_route_table_association" "tier3-rtass-pri-c-db" {
+  subnet_id      = aws_subnet.tier3-sub-pri-c-db.id
+  route_table_id = aws_route_table.tier3-rt-pri-db.id
 }
 
 # BASTION
