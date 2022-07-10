@@ -13,3 +13,5 @@
 - Route Table
 - Load Balancer
 - EC2
+
+<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/tube-jeonghoon/3tier-terraform?style=plastic">
